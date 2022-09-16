@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'ui/products/product_detail_screen.dart';
+import 'ui/products/products_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,31 +9,29 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Shop',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Lato',
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.purple,
-        ).copyWith(
-          secondary: Colors.deepOrange,
+        title: 'My Shop',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Lato',
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.purple,
+          ).copyWith(
+            secondary: Colors.deepOrange,
+          ),
         ),
-      ),
-      home: Container(
-        color: Colors.green,
-      ),
-    );
+        home:  SafeArea(
+          child: ProductDetailScreen(
+            ProductsManager().items[0]),
+        ),
+        );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-
 
   final String title;
 
@@ -44,23 +44,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-  
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       appBar: AppBar(
-       
         title: Text(widget.title),
       ),
       body: Center(
-       
         child: Column(
-        
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
