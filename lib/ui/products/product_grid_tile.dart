@@ -6,8 +6,8 @@ import '../../models/product.dart';
 
 import 'product_detail_screen.dart';
 
-class ProductGridTile extends StatelessWidget{
-  const ProductGridTile( 
+class UserProductListTile extends StatelessWidget{
+  const UserProductListTile( 
     this.product,{
       super.key,
     }
