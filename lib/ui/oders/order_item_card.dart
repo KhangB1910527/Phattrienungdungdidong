@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myshop/models/oder_item.dart';
+import 'package:myshop/models/order_item.dart';
 
 import '../../models/order_item.dart';
 

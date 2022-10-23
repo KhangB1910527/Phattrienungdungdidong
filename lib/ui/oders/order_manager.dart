@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:myshop/models/oder_item.dart';
+import 'package:myshop/models/order_item.dart';
 
 import '../../models/cart_item.dart';
 import 'package:flutter/foundation.dart';
