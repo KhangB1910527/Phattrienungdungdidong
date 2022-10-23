@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myshop/ui/products/edit_product_screen.dart';
 import 'ui/products/product_detail_screen.dart';
 import 'ui/products/products_manager.dart';
-import 'ui/products/product_overview_screen.dart';
+import 'ui/products/products_overview_screen.dart';
 import 'ui/products/user_products_screen.dart';
 import 'ui/products/user_product_list_tile.dart';
 import 'ui/oders/orders_screen.dart';
