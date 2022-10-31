@@ -62,7 +62,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true 
   assets: 
-    - .env
+    - .evn
   fonts:
     - family: Lato
       fonts:
