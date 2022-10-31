@@ -6,13 +6,18 @@ import 'ui/products/products_overview_screen.dart';
 import 'ui/products/user_products_screen.dart';
 import 'ui/products/user_product_list_tile.dart';
 import 'ui/oders/orders_screen.dart';
+
 import 'ui/screens.dart';
 
 import 'ui/cart/cart_screen.dart';
 
 import 'package:provider/provider.dart';
 
-void main() {
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+
+Future<void> main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -24,6 +29,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (context) => AuthManager(),
+          ),
+
+        ChangeNotifierProvider(
           create: (ctx) => ProductsManager(),
         ),
         ChangeNotifierProvider(
@@ -33,7 +42,9 @@ class MyApp extends StatelessWidget {
           create: (ctx) => OrdersManager(),
         ),
       ],
-      child: MaterialApp(
+      child: Consumer<AuthManager>(
+        builder: (ctx, authManager,child) {
+        return MaterialApp(
         title: 'My Shop',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -42,7 +53,17 @@ class MyApp extends StatelessWidget {
                 ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(
               secondary: Colors.deepOrange,
             )),
-        home: const ProductsOverviewScreen(),
+        home: authManager.isAuth
+            ? const ProductsOverviewScreen()
+                  : FutureBuilder(
+                      future: authManager.tryAutoLogin(),
+                      builder: (ctx, snapshot) {
+                        return snapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen();
+                      },
+                  ),
         routes: {
           CartScreen.routeName: (ctx) => const CartScreen(),
           OrdersScreen.routeName: (ctx) => const OrdersScreen(),
@@ -74,7 +95,9 @@ class MyApp extends StatelessWidget {
           }
           return null;
         },
-      ),
+        );
+        },
+      )
     );
   }
 }
