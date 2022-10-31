@@ -15,16 +15,16 @@ class ProductsService extends FirebaseService {
           filterByUser ? 'orderBy = "creatorId"&equalTo="$userId"' : '';
       final productUrl =
           Uri.parse('$databaseUrl/products.json?auth=$token&$filters');
-      final respone = await http.get(productUrl);
-      final productMap = json.decode(respone.body) as Map<String, dynamic>;
-      if (respone.statusCode != 200) {
+      final response = await http.get(productUrl);
+      final productMap = json.decode(response.body) as Map<String, dynamic>;
+      if (response.statusCode != 200) {
         print(productMap['error']);
         return products;
       }
       final userfavoritesUrl =
           Uri.parse('$databaseUrl/userFavorites/$userId.json?auth=$token');
-      final userfavoriteRespone = await http.get(userfavoritesUrl);
-      final userFavoritesMap = json.decode(userfavoriteRespone.body);
+      final userfavoriteResponse = await http.get(userfavoritesUrl);
+      final userFavoritesMap = json.decode(userfavoriteResponse.body);
       productMap.forEach((productId, product) {
         final isFavorite = (userFavoritesMap == null)
             ? false
@@ -46,7 +46,7 @@ class ProductsService extends FirebaseService {
   Future<Product?> addProduct(Product product) async {
     try {
       final url = Uri.parse('$databaseUrl/products.json?auth=$token');
-      final respone = await http.post(
+      final response = await http.post(
         url,
         body: json.encode(
           product.toJson()
@@ -55,11 +55,11 @@ class ProductsService extends FirebaseService {
             }),
         ),
       );
-      if (respone.statusCode != 200) {
-        throw Exception(json.decode(respone.body)['error']);
+      if (response.statusCode != 200) {
+        throw Exception(json.decode(response.body)['error']);
       }
       return product.coppyWith(
-        id: json.decode(respone.body)['name'],
+        id: json.decode(response.body)['name'],
       );
     } catch (error) {
       print(error);
@@ -69,13 +69,13 @@ class ProductsService extends FirebaseService {
 
   Future<bool> updateProduct(Product product) async {
     try {
-      final url = Uri.parse('$databaseUrl/{products.id}.json?auth=$token');
-      final respone = await http.patch(
+      final url = Uri.parse('$databaseUrl/product/{products.id}.json?auth=$token');
+      final response = await http.patch(
         url,
         body: json.encode(product.toJson()),
       );
-      if (respone.statusCode != 200) {
-        throw Exception(json.decode(respone.body)['error']);
+      if (response.statusCode != 200) {
+        throw Exception(json.decode(response.body)['error']);
       }
       return true;
     } catch (error) {
@@ -87,9 +87,9 @@ class ProductsService extends FirebaseService {
   Future<bool> deleteProduct(String id) async {
     try {
       final url = Uri.parse('$databaseUrl/products/$id.json?auth=$token');
-      final respone = await http.delete(url);
-      if (respone.statusCode != 200) {
-        throw Exception(json.decode(respone.body)['error']);
+      final response = await http.delete(url);
+      if (response.statusCode != 200) {
+        throw Exception(json.decode(response.body)['error']);
       }
       return true;
     } catch (error) {
@@ -102,14 +102,14 @@ class ProductsService extends FirebaseService {
     try {
       final url = Uri.parse(
           '$databaseUrl/userFavorites/$userId/${product.id}.json?auth=$token');
-      final respone = await http.put(
+      final response = await http.put(
         url,
         body: json.encode(
           product.isFavorite,
         ),
       );
-      if (respone.statusCode != 200) {
-        throw Exception(json.decode(respone.body)['error']);
+      if (response.statusCode != 200) {
+        throw Exception(json.decode(response.body)['error']);
       }
       return true;
     } catch (error) {
