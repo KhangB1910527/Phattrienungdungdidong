@@ -55,6 +55,8 @@ class ProductsManager with ChangeNotifier {
     }
   }
 
+
+
   Future<void> toggleFavoriteStatus(Product product) async {
     final savedStatus = product.isFavorite;
     product.isFavorite = !savedStatus;
