@@ -5,7 +5,7 @@ import 'ui/products/products_manager.dart';
 import 'ui/products/products_overview_screen.dart';
 import 'ui/products/user_products_screen.dart';
 import 'ui/products/user_product_list_tile.dart';
-import 'ui/oders/orders_screen.dart';
+import 'ui/orders/orders_screen.dart';
 
 import 'ui/screens.dart';
 
@@ -17,6 +17,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
+  //1
   await dotenv.load();
   runApp(const MyApp());
 }
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        //2
         ChangeNotifierProvider(
           create: (context) => AuthManager(),
           ),
@@ -47,6 +49,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => OrdersManager(),
         ),
       ],
+      //3
       child: Consumer<AuthManager>(
         builder: (ctx, authManager,child) {
         return MaterialApp(
