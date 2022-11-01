@@ -1,31 +1,36 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../models/product.dart';
 import '../models/auth_token.dart';
 import 'firebase_service.dart';
 
 class ProductsService extends FirebaseService {
   ProductsService([AuthToken? authToken]) : super(authToken);
+
   Future<List<Product>> fetchProducts([bool filterByUser = false]) async {
     final List<Product> products = [];
 
     try {
       final filters =
-          filterByUser ? 'orderBy = "creatorId"&equalTo="$userId"' : '';
-      final productUrl =
+          filterByUser ? 'orderBy="creatorId"&equalIo="$userId"' : '';
+      final productsUrl =
           Uri.parse('$databaseUrl/products.json?auth=$token&$filters');
-      final response = await http.get(productUrl);
-      final productMap = json.decode(response.body) as Map<String, dynamic>;
+      final response = await http.get(productsUrl);
+      final productsMap = json.decode(response.body) as Map<String, dynamic>;
+
       if (response.statusCode != 200) {
-        print(productMap['error']);
+        print(productsMap['error']);
         return products;
       }
-      final userfavoritesUrl =
+
+      final userFavoritesUrl =
           Uri.parse('$databaseUrl/userFavorites/$userId.json?auth=$token');
-      final userfavoriteResponse = await http.get(userfavoritesUrl);
-      final userFavoritesMap = json.decode(userfavoriteResponse.body);
-      productMap.forEach((productId, product) {
+
+      final userFavoritesResponse = await http.get(userFavoritesUrl);
+
+      final userFavoritesMap = json.decode(userFavoritesResponse.body);
+
+      productsMap.forEach((productId, product) {
         final isFavorite = (userFavoritesMap == null)
             ? false
             : (userFavoritesMap[productId] ?? false);
@@ -39,14 +44,14 @@ class ProductsService extends FirebaseService {
       return products;
     } catch (error) {
       print(error);
-      return products;
     }
+    return products;
   }
 
   Future<Product?> addProduct(Product product) async {
     try {
       final url = Uri.parse('$databaseUrl/products.json?auth=$token');
-      final response = await http.post(
+      final respone = await http.post(
         url,
         body: json.encode(
           product.toJson()
@@ -55,11 +60,11 @@ class ProductsService extends FirebaseService {
             }),
         ),
       );
-      if (response.statusCode != 200) {
-        throw Exception(json.decode(response.body)['error']);
+      if (respone.statusCode != 200) {
+        throw Exception(json.decode(respone.body)['error']);
       }
       return product.coppyWith(
-        id: json.decode(response.body)['name'],
+        id: json.decode(respone.body)['name'],
       );
     } catch (error) {
       print(error);
@@ -69,13 +74,13 @@ class ProductsService extends FirebaseService {
 
   Future<bool> updateProduct(Product product) async {
     try {
-      final url = Uri.parse('$databaseUrl/product/{products.id}.json?auth=$token');
-      final response = await http.patch(
+      final url = Uri.parse('$databaseUrl/{products.id}.json?auth=$token');
+      final respone = await http.patch(
         url,
         body: json.encode(product.toJson()),
       );
-      if (response.statusCode != 200) {
-        throw Exception(json.decode(response.body)['error']);
+      if (respone.statusCode != 200) {
+        throw Exception(json.decode(respone.body)['error']);
       }
       return true;
     } catch (error) {
@@ -87,9 +92,9 @@ class ProductsService extends FirebaseService {
   Future<bool> deleteProduct(String id) async {
     try {
       final url = Uri.parse('$databaseUrl/products/$id.json?auth=$token');
-      final response = await http.delete(url);
-      if (response.statusCode != 200) {
-        throw Exception(json.decode(response.body)['error']);
+      final respone = await http.delete(url);
+      if (respone.statusCode != 200) {
+        throw Exception(json.decode(respone.body)['error']);
       }
       return true;
     } catch (error) {
@@ -102,14 +107,14 @@ class ProductsService extends FirebaseService {
     try {
       final url = Uri.parse(
           '$databaseUrl/userFavorites/$userId/${product.id}.json?auth=$token');
-      final response = await http.put(
+      final respone = await http.put(
         url,
         body: json.encode(
           product.isFavorite,
         ),
       );
-      if (response.statusCode != 200) {
-        throw Exception(json.decode(response.body)['error']);
+      if (respone.statusCode != 200) {
+        throw Exception(json.decode(respone.body)['error']);
       }
       return true;
     } catch (error) {
